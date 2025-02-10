@@ -1,0 +1,44 @@
+# Dependências do Go
+/vendor/
+
+# Arquivos binários compilados
+/bin/
+/obj/
+
+# Arquivos de build do Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários de edição
+*~
+*.swp
+*.swo
+
+# Arquivos de cache
+*.cache
+
+# Configurações do editor
+.idea/
+.vscode/
+
+# Arquivos de configuração de go mod e go sum
+/go.sum
+
+# Arquivos de configuração do GoLand
+/.idea/
+
+# Geradores de código
+/gen/
+
+# Arquivos de testes temporários
+*.out
+
+# Arquivos de configuração
+.env
