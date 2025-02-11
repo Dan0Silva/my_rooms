@@ -18,6 +18,14 @@ func CreateSpace(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 
+	// db, err := database.Connect()
+	// if err != nil {
+	// 	response.Error(w, "Error trying to connect to the database", http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
+	// defer db.Close()
+
+	// spaceRepository := //create repository
 }
 
 func ListSpaces(w http.ResponseWriter, r *http.Request) {
