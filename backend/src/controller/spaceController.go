@@ -9,8 +9,15 @@ func CreateSpace(w http.ResponseWriter, r *http.Request) {
 
 	// reqBody, err := io.ReadAll(r.Body)
 	// if err != nil {
-
+	// 	response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
+	// 	return
 	// }
+
+	// if err = json.Unmarshal(reqBody, &newSpace); err != nil {
+	// 	response.Error(w, "Error converting request body to JSON", http.StatusBadRequest, err.Error())
+	// 	return
+	// }
+
 }
 
 func ListSpaces(w http.ResponseWriter, r *http.Request) {
