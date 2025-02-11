@@ -25,6 +25,7 @@ func GenerateRoutes(router *mux.Router) {
 	allroutes := []Routes{}
 
 	allroutes = append(allroutes, pingRoute)
+	allroutes = append(allroutes, SpaceRoutes...)
 
 	for _, route := range allroutes {
 		router.HandleFunc(route.Uri, route.Function).Methods(route.Method)
