@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
+	"strings"
 
 	"github.com/Dan0Silva/my_rooms/src/models"
 )
@@ -84,4 +86,55 @@ func (repository spaces) GetByID(spaceId string) (*models.Space, error) {
 
 	return &space, nil
 
+}
+
+func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
+	var setClauses []string
+	var args []interface{}
+
+	// Adiciona cláusulas ao UPDATE para os campos que não estão vazios
+	if editedSpace.Name != "" {
+		setClauses = append(setClauses, "NAME = ?")
+		args = append(args, editedSpace.Name)
+	}
+	if editedSpace.Photo_url != "" {
+		setClauses = append(setClauses, "PHOTO_URL = ?")
+		args = append(args, editedSpace.Photo_url)
+	}
+	if editedSpace.Description != "" {
+		setClauses = append(setClauses, "DESCRIPTION = ?")
+		args = append(args, editedSpace.Description)
+	}
+	if editedSpace.Capacity != 0 { // Verifica se o campo Capacity é diferente de zero (valor padrão)
+		setClauses = append(setClauses, "CAPACITY = ?")
+		args = append(args, editedSpace.Capacity)
+	}
+	if editedSpace.Locate != "" {
+		setClauses = append(setClauses, "LOCATE = ?")
+		args = append(args, editedSpace.Locate)
+	}
+
+	// Se não houver campos para atualizar, retorna um erro
+	if len(setClauses) == 0 {
+		return fmt.Errorf("no fields to update")
+	}
+
+	// Prepara a query com as cláusulas SET dinâmicas
+	query := fmt.Sprintf("UPDATE SPACES SET %s WHERE ID = ?", strings.Join(setClauses, ", "))
+	args = append(args, spaceId)
+
+	// Prepara a declaração
+	statement, err := repository.database.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	// Executa a query
+	_, err = statement.Exec(args...)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

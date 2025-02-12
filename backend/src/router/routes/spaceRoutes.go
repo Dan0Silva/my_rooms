@@ -26,13 +26,13 @@ var SpaceRoutes = []Routes{
 		RequireAuth: false,
 	},
 	{
-		Uri: "/spaces",
+		Uri: "/spaces/{id}",
 		Method: http.MethodPatch,
 		Function: spaceController.EditSpace,
 		RequireAuth: false,
 	},
 	{
-		Uri: "/spaces",
+		Uri: "/spaces/{id}",
 		Method: http.MethodDelete,
 		Function: spaceController.DeleteSpace,
 		RequireAuth: false,

@@ -23,7 +23,7 @@ func CreateSpace(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = json.Unmarshal(reqBody, &newSpace); err != nil {
-		response.Error(w, "rror converting request body to JSON", http.StatusBadRequest, err.Error())
+		response.Error(w, "error converting request body to JSON", http.StatusBadRequest, err.Error())
 		return
 	}
 
@@ -74,7 +74,7 @@ func ViewSpace(w http.ResponseWriter, r *http.Request) {
 
 	db, err := database.Connect()
 	if err != nil {
-		response.Error(w, "Error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
 		return
 	}
 	defer db.Close()
@@ -91,7 +91,35 @@ func ViewSpace(w http.ResponseWriter, r *http.Request) {
 }
 
 func EditSpace(w http.ResponseWriter, r *http.Request) {
+	spaceId := mux.Vars(r)["id"]
+	var space models.Space
+	
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
+		return
+	}
 
+	if err = json.Unmarshal(reqBody, &space); err != nil {
+		response.Error(w, "error converting request body to JSON", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	spaceRepository := repository.NewSpacesRepository(db)
+	
+	if err = spaceRepository.Edit(spaceId, space); err != nil {
+		response.Error(w, "error trying update space", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(w, http.StatusOK, nil)
 }
 
 func DeleteSpace(w http.ResponseWriter, r *http.Request) {
