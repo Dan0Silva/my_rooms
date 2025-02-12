@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/Dan0Silva/my_rooms/src/database"
 	"github.com/Dan0Silva/my_rooms/src/models"
 	"github.com/Dan0Silva/my_rooms/src/repository"
 	"github.com/Dan0Silva/my_rooms/src/response"
+	"github.com/gorilla/mux"
 )
 
 func CreateReserve(w http.ResponseWriter, r *http.Request) {
@@ -62,5 +64,25 @@ func ListReserves(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteReserve(w http.ResponseWriter, r *http.Request) {
-	
+	reserveID := mux.Vars(r)["id"]
+
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	reserveRepository := repository.NewReservesRepository(db)
+
+	if err = reserveRepository.Delete(reserveID); err != nil {
+		if strings.Contains(err.Error(), "no reserve found") {
+			response.Error(w, "reserve not found", http.StatusNotFound, err.Error())
+		} else {
+			response.Error(w, "error trying to delete reserve", http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	response.Success(w, http.StatusOK, nil)
 }

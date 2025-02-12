@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/Dan0Silva/my_rooms/src/models"
 )
@@ -54,3 +55,26 @@ func (repository reserves) ListAll() ([]models.Reserve, error) {
 
 	return list, nil
 } 
+
+func (repository reserves) Delete(repositoryID string) error {
+	statement, err := repository.database.Prepare("DELETE FROM RESERVES WHERE ID = ?")
+	if err != nil {
+		return fmt.Errorf("error preparing delete statement: %v", err)
+	}
+	defer statement.Close()
+
+	result, err := statement.Exec(repositoryID)
+	if err != nil {
+		return fmt.Errorf("error executing delete statement: %v", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error getting rows affected: %v", err)
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no reserve found with ID: %s", repositoryID)
+	}
+
+	return nil
+}
