@@ -92,7 +92,6 @@ func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
 	var setClauses []string
 	var args []interface{}
 
-	// Adiciona cláusulas ao UPDATE para os campos que não estão vazios
 	if editedSpace.Name != "" {
 		setClauses = append(setClauses, "NAME = ?")
 		args = append(args, editedSpace.Name)
@@ -105,7 +104,7 @@ func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
 		setClauses = append(setClauses, "DESCRIPTION = ?")
 		args = append(args, editedSpace.Description)
 	}
-	if editedSpace.Capacity != 0 { // Verifica se o campo Capacity é diferente de zero (valor padrão)
+	if editedSpace.Capacity != 0 {
 		setClauses = append(setClauses, "CAPACITY = ?")
 		args = append(args, editedSpace.Capacity)
 	}
@@ -114,26 +113,45 @@ func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
 		args = append(args, editedSpace.Locate)
 	}
 
-	// Se não houver campos para atualizar, retorna um erro
 	if len(setClauses) == 0 {
 		return fmt.Errorf("no fields to update")
 	}
 
-	// Prepara a query com as cláusulas SET dinâmicas
 	query := fmt.Sprintf("UPDATE SPACES SET %s WHERE ID = ?", strings.Join(setClauses, ", "))
 	args = append(args, spaceId)
 
-	// Prepara a declaração
 	statement, err := repository.database.Prepare(query)
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	// Executa a query
 	_, err = statement.Exec(args...)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (repository spaces) Delete(spaceId string) error {
+	statement, err := repository.database.Prepare("DELETE FROM SPACES WHERE ID = ?")
+	if err != nil {
+		return fmt.Errorf("error preparing delete statement: %v", err)
+	}
+	defer statement.Close()
+
+	result, err := statement.Exec(spaceId)
+	if err != nil {
+		return fmt.Errorf("error executing delete statement: %v", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error getting rows affected: %v", err)
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no space found with ID: %s", spaceId)
 	}
 
 	return nil

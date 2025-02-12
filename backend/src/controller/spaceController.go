@@ -123,5 +123,25 @@ func EditSpace(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteSpace(w http.ResponseWriter, r *http.Request) {
+	spaceId := mux.Vars(r)["id"]
 
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	spaceRepository := repository.NewSpacesRepository(db)
+
+	if err = spaceRepository.Delete(spaceId); err != nil {
+		if strings.Contains(err.Error(), "no space found") {
+			response.Error(w, "space not found", http.StatusNotFound, err.Error())
+		} else {
+			response.Error(w, "error trying to delete space", http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	response.Success(w, http.StatusOK, nil)
 }
