@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/Dan0Silva/my_rooms/src/database"
 	"github.com/Dan0Silva/my_rooms/src/models"
 	"github.com/Dan0Silva/my_rooms/src/repository"
 	"github.com/Dan0Silva/my_rooms/src/response"
+	"github.com/gorilla/mux"
 )
 
 func CreateSpace(w http.ResponseWriter, r *http.Request) {
@@ -44,11 +46,48 @@ func CreateSpace(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListSpaces(w http.ResponseWriter, r *http.Request) {
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
 
+	spaceRepository := repository.NewSpacesRepository(db)
+
+	spaces, err := spaceRepository.ListAll()
+	if err != nil {
+		response.Error(w, "error trying get spaces", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(w, http.StatusOK, spaces)
 }
 
 func ViewSpace(w http.ResponseWriter, r *http.Request) {
+	spaceId := mux.Vars(r)["id"]
 
+	if strings.Trim(spaceId, " ") == "" {
+		response.Error(w, "search field id empty", http.StatusNoContent, nil)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "Error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	spaceRepository := repository.NewSpacesRepository(db)
+
+	result, err := spaceRepository.GetByID(spaceId)
+	if err != nil {
+		response.Error(w, "error to trying get space by id", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(w, http.StatusOK, result)
 }
 
 func EditSpace(w http.ResponseWriter, r *http.Request) {

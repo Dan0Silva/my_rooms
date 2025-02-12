@@ -12,10 +12,3 @@ type Space struct {
 	IsAvailable bool			`json:"isAvailable"`
 	CreatedAt 	time.Time	`json:"createdAt,omitempty"`
 }
-
-/*
-	terminando de fazer o banco de dados
-	devo fazer a configuracao (config.go)
-	e adicionar as envs
-
-*/
