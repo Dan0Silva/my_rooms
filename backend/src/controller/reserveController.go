@@ -43,7 +43,22 @@ func CreateReserve(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListReserves(w http.ResponseWriter, r *http.Request) {
-	
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	reserveRepository := repository.NewReservesRepository(db)
+
+	reserves, err := reserveRepository.ListAll()
+	if err != nil {
+		response.Error(w, "error trying get reserves", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(w, http.StatusOK, reserves)
 }
 
 func DeleteReserve(w http.ResponseWriter, r *http.Request) {
