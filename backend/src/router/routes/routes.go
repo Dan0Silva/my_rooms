@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	pingController "github.com/Dan0Silva/my_rooms/src/controller"
+	"github.com/Dan0Silva/my_rooms/src/middlewares"
 	"github.com/gorilla/mux"
 )
 
@@ -27,8 +28,14 @@ func GenerateRoutes(router *mux.Router) {
 	allroutes = append(allroutes, pingRoute)
 	allroutes = append(allroutes, SpaceRoutes...)
 	allroutes = append(allroutes, ReserveRoutes...)
+	allroutes = append(allroutes, AdminRoutes...)
 
 	for _, route := range allroutes {
-		router.HandleFunc(route.Uri, route.Function).Methods(route.Method)
+
+		if route.RequireAuth {
+			router.HandleFunc(route.Uri, middlewares.Authenticate(route.Function)).Methods(route.Method)
+		} else {
+			router.HandleFunc(route.Uri, route.Function).Methods(route.Method)
+		}
 	}
 }

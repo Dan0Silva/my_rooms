@@ -17,12 +17,12 @@ var ReserveRoutes = []Routes{
 		Uri: "/reserves",
 		Method: http.MethodGet,
 		Function: reserveController.ListReserves,
-		RequireAuth: false,
+		RequireAuth: true,
 	},
 	{
 		Uri: "/reserves/{id}",
 		Method: http.MethodDelete,
 		Function: reserveController.DeleteReserve,
-		RequireAuth: false,
+		RequireAuth: true,
 	},
 }
