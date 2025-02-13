@@ -1,6 +1,6 @@
 package models
 
 type Admin struct {
-	email 		string
-	password 	string
+	Nick	 		string	`json:nick`
+	Password 	string	`json:password`
 }

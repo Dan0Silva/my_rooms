@@ -11,7 +11,7 @@ var SpaceRoutes = []Routes{
 		Uri: "/spaces",
 		Method: http.MethodPost,
 		Function: spaceController.CreateSpace,
-		RequireAuth: false,
+		RequireAuth: true,
 	},	
 	{
 		Uri: "/spaces",
@@ -29,12 +29,12 @@ var SpaceRoutes = []Routes{
 		Uri: "/spaces/{id}",
 		Method: http.MethodPatch,
 		Function: spaceController.EditSpace,
-		RequireAuth: false,
+		RequireAuth: true,
 	},
 	{
 		Uri: "/spaces/{id}",
 		Method: http.MethodDelete,
 		Function: spaceController.DeleteSpace,
-		RequireAuth: false,
+		RequireAuth: true,
 	},
 }
