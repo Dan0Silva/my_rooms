@@ -11,6 +11,9 @@ import (
 var (
 	StringConnectionDB = ""
 	Port = ""
+
+	AdminNick = ""
+	AdminPassword = ""
 )
 
 func LoadEnvironment() {
@@ -29,6 +32,9 @@ func LoadEnvironment() {
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"),
 	)
+
+	AdminNick = os.Getenv("ADMIN_NICK")
+	AdminPassword = os.Getenv("ADMIN_PASSWORD")
 
 	fmt.Printf("  Environment loaded successfully\n")
 }
