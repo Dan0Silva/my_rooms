@@ -1,35 +1,45 @@
 import { useState } from "react";
-import reactLogo from "/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import Header from "../../components/Header";
+import SpaceCard from "../../components/SpaceCard";
 
-function App() {
-  const [count, setCount] = useState(0);
+import { GoChevronRight, GoChevronLeft } from "react-icons/go";
+
+export default () => {
+  const [page, setPage] = useState(1);
+
+  const handlePage = (state: number) => {
+    if (state == 1) {
+      setPage(page + 1);
+    } else if (state == 0) {
+      setPage(page - 1);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <Header />
+      <div className="grid h-[42rem] grid-cols-5 gap-y-6 w-full mt-12 pl-24 pr-24 justify-items-center">
+        <SpaceCard />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className="w-full h-16 flex justify-center pt-4">
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            handlePage(0);
+          }}
+        >
+          <GoChevronLeft size={32} />
+        </div>
+        <p className="text-xl font-semibold mx-6">page {page}</p>
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            handlePage(1);
+          }}
+        >
+          <GoChevronRight size={32} />
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   );
-}
-
-export default App;
+};
