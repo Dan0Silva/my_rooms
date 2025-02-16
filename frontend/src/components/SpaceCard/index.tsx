@@ -1,6 +1,10 @@
-export default () => {
+type Props = {
+  key: string;
+};
+
+export default (props: Props) => {
   return (
-    <div className="w-56 h-[20rem] overflow-hidden">
+    <div className="w-56 h-[20rem] overflow-hidden" key={props.key}>
       <img
         src="./default_photo.jpg"
         alt="photo"

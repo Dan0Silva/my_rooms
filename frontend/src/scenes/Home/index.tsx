@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../../components/Header";
 import SpaceCard from "../../components/SpaceCard";
 
 import { GoChevronRight, GoChevronLeft } from "react-icons/go";
+import { getPosts } from "../../services/ api/api";
 
 export default () => {
   const [page, setPage] = useState(1);
+  const [items, setItems] = useState([]);
 
   const handlePage = (state: number) => {
     if (state == 1) {
@@ -15,11 +17,17 @@ export default () => {
     }
   };
 
+  useEffect(() => {
+    getPosts(setItems);
+  }, []);
+
   return (
     <div>
       <Header />
       <div className="grid h-[42rem] grid-cols-5 gap-y-6 w-full mt-12 pl-24 pr-24 justify-items-center">
-        <SpaceCard />
+        {items.map((item: any) => (
+          <SpaceCard key={item.id} />
+        ))}
       </div>
       <div className="w-full h-16 flex justify-center pt-4">
         <div
