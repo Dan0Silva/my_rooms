@@ -11,7 +11,6 @@ import (
 
 
 func main() {
-
 	config.LoadEnvironment()
 
 	port := config.Port
