@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const baseURL = "http://localhost:8080";
+const baseURL = 'http://localhost:5050';
 
 export const getPosts = async (setPosts: Function) => {
   try {
@@ -8,9 +8,9 @@ export const getPosts = async (setPosts: Function) => {
     if (response.data && response.data.data) {
       setPosts(response.data.data);
     } else {
-      console.error("Dados inválidos recebidos da API:", response.data);
+      console.error('Dados inválidos recebidos da API:', response.data);
     }
   } catch (error) {
-    console.error("Erro ao buscar espaços", error);
+    console.error('Erro ao buscar espaços', error);
   }
 };

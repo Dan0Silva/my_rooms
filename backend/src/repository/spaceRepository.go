@@ -19,7 +19,7 @@ func NewSpacesRepository(db *sql.DB) *spaces {
 
 func (repository spaces) Create(newSpace models.Space) error {
 	statement, err := repository.database.Prepare(`
-	INSERT INTO SPACES (NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, ISAVAILABLE) 
+	INSERT INTO SPACES (NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, IS_AVAILABLE) 
 	VALUES (?, ?, ?, ?, ?, ?)`) 
 	if err != nil {
 		return err
@@ -37,7 +37,7 @@ func (repository spaces) Create(newSpace models.Space) error {
 func (repository spaces) ListAll() ([]models.Space, error) {
 	list := []models.Space{}
 
-	rows, err := repository.database.Query("SELECT ID, NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, ISAVAILABLE FROM SPACES")
+	rows, err := repository.database.Query("SELECT ID, NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, IS_AVAILABLE FROM SPACES")
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (repository spaces) GetByID(spaceId string) (*models.Space, error) {
 	var space models.Space
 	
 	rows, err := repository.database.Query(`
-	SELECT ID, NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, ISAVAILABLE FROM SPACES WHERE ID = ?
+	SELECT ID, NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, IS_AVAILABLE FROM SPACES WHERE ID = ?
 	`, spaceId)
 
 	if err != nil {

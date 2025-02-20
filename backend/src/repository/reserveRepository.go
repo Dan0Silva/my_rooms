@@ -17,7 +17,7 @@ func NewReservesRepository(db *sql.DB) *reserves {
 
 func (repository reserves) Create(newReserve models.Reserve) error {
 	statement, err := repository.database.Prepare(`
-	INSERT INTO RESERVES (USER_NAME, USER_EMAIL, SPACEID, RESERVE_DATE)
+	INSERT INTO RESERVES (USER_NAME, USER_EMAIL, SPACE_ID, RESERVE_DATE)
 	VALUES (?, ?, ?, ?)`)
 
 	if err != nil {
@@ -37,7 +37,7 @@ func (repository reserves) Create(newReserve models.Reserve) error {
 func (repository reserves) ListAll() ([]models.Reserve, error) {
 	var list []models.Reserve
 	
-	rows, err := repository.database.Query("SELECT ID, USER_NAME, USER_EMAIL, SPACEID, RESERVE_DATE FROM RESERVES")
+	rows, err := repository.database.Query("SELECT ID, USER_NAME, USER_EMAIL, SPACE_ID, RESERVE_DATE FROM RESERVES")
 	if err != nil {
 		return nil, err
 	}

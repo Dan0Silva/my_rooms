@@ -8,9 +8,9 @@ import (
 
 var AdminRoutes = []Routes{
 	{
-		Uri: "/login",
-		Method: http.MethodPost,
-		Function: administratorLoginController.Login,
+		Uri:         "/login",
+		Method:      http.MethodPost,
+		Function:    administratorLoginController.Login,
 		RequireAuth: false,
 	},
 }

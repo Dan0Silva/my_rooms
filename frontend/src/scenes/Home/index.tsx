@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import Header from "../../components/Header";
-import SpaceCard from "../../components/SpaceCard";
+import { useEffect, useState } from 'react';
+import Header from '../../components/Header';
+import SpaceCard from '../../components/SpaceCard';
 
-import { GoChevronRight, GoChevronLeft } from "react-icons/go";
-import { getPosts } from "../../services/ api/api";
+import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
+import { getPosts } from '../../services/ api/api';
 
 export default () => {
   const [page, setPage] = useState(1);
