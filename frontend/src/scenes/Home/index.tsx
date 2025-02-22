@@ -22,11 +22,11 @@ export default () => {
   }, []);
 
   return (
-    <div>
+    <div className='bg-stone-50'>
       <Header />
-      <div className="grid h-[42rem] grid-cols-5 gap-y-6 w-full mt-12 pl-24 pr-24 justify-items-center">
+      <div className="grid h-[42rem] grid-cols-5 gap-y-4 w-full mt-12 px-52 justify-items-center">
         {items.map((item: any) => (
-          <SpaceCard key={item.id} />
+          <SpaceCard key={item.id} space={item} />
         ))}
       </div>
       <div className="w-full h-16 flex justify-center pt-4">
