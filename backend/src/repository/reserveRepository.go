@@ -17,7 +17,7 @@ func NewReservesRepository(db *sql.DB) *reserves {
 
 func (repository reserves) Create(newReserve models.Reserve) error {
 	statement, err := repository.database.Prepare(`
-	INSERT INTO RESERVES (USER_NAME, USER_EMAIL, SPACE_ID, RESERVE_DATE)
+	INSERT INTO RESERVATIONS (USER_NAME, USER_EMAIL, SPACE_ID, RESERVE_DATE)
 	VALUES (?, ?, ?, ?)`)
 
 	if err != nil {
@@ -36,8 +36,8 @@ func (repository reserves) Create(newReserve models.Reserve) error {
 
 func (repository reserves) ListAll() ([]models.Reserve, error) {
 	var list []models.Reserve
-	
-	rows, err := repository.database.Query("SELECT ID, USER_NAME, USER_EMAIL, SPACE_ID, RESERVE_DATE FROM RESERVES")
+
+	rows, err := repository.database.Query("SELECT ID, USER_NAME, USER_EMAIL, SPACE_ID, RESERVE_DATE FROM RESERVATIONS")
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (repository reserves) ListAll() ([]models.Reserve, error) {
 
 	for rows.Next() {
 		var reserve models.Reserve
-		
+
 		if err = rows.Scan(&reserve.ID, &reserve.UserName, &reserve.UserEmail, &reserve.SpaceId, &reserve.ReserveDate); err != nil {
 			return nil, err
 		}
@@ -54,10 +54,10 @@ func (repository reserves) ListAll() ([]models.Reserve, error) {
 	}
 
 	return list, nil
-} 
+}
 
 func (repository reserves) Delete(repositoryID string) error {
-	statement, err := repository.database.Prepare("DELETE FROM RESERVES WHERE ID = ?")
+	statement, err := repository.database.Prepare("DELETE FROM RESERVATIONS WHERE ID = ?")
 	if err != nil {
 		return fmt.Errorf("error preparing delete statement: %v", err)
 	}

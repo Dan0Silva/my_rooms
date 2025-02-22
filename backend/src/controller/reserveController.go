@@ -44,7 +44,7 @@ func CreateReserve(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, http.StatusNoContent, nil)
 }
 
-func ListReserves(w http.ResponseWriter, r *http.Request) {
+func ListReservations(w http.ResponseWriter, r *http.Request) {
 	db, err := database.Connect()
 	if err != nil {
 		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
