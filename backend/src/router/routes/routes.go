@@ -9,16 +9,16 @@ import (
 )
 
 type Routes struct {
-	Uri 					string
-	Method 				string
-	Function 			func(http.ResponseWriter, *http.Request)
-	RequireAuth 	bool
+	Uri         string
+	Method      string
+	Function    func(http.ResponseWriter, *http.Request)
+	RequireAuth bool
 }
 
 var pingRoute = Routes{
-	Uri: "/ping",
-	Method: http.MethodGet,
-	Function: pingController.Ping,
+	Uri:         "/ping",
+	Method:      http.MethodGet,
+	Function:    pingController.Ping,
 	RequireAuth: false,
 }
 

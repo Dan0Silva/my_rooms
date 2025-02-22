@@ -8,33 +8,33 @@ import (
 
 var SpaceRoutes = []Routes{
 	{
-		Uri: "/spaces",
-		Method: http.MethodPost,
-		Function: spaceController.CreateSpace,
-		RequireAuth: true,
-	},	
-	{
-		Uri: "/spaces",
-		Method: http.MethodGet,
-		Function: spaceController.ListSpaces,
-		RequireAuth: false,
-	},
-	{
-		Uri: "/spaces/{id}",
-		Method: http.MethodGet,
-		Function: spaceController.ViewSpace,
-		RequireAuth: false,
-	},
-	{
-		Uri: "/spaces/{id}",
-		Method: http.MethodPatch,
-		Function: spaceController.EditSpace,
+		Uri:         "/spaces",
+		Method:      http.MethodPost,
+		Function:    spaceController.CreateSpace,
 		RequireAuth: true,
 	},
 	{
-		Uri: "/spaces/{id}",
-		Method: http.MethodDelete,
-		Function: spaceController.DeleteSpace,
+		Uri:         "/spaces",
+		Method:      http.MethodGet,
+		Function:    spaceController.ListSpaces,
+		RequireAuth: false,
+	},
+	{
+		Uri:         "/spaces/{id}",
+		Method:      http.MethodGet,
+		Function:    spaceController.ViewSpace,
+		RequireAuth: false,
+	},
+	{
+		Uri:         "/spaces/{id}",
+		Method:      http.MethodPatch,
+		Function:    spaceController.EditSpace,
+		RequireAuth: true,
+	},
+	{
+		Uri:         "/spaces/{id}",
+		Method:      http.MethodDelete,
+		Function:    spaceController.DeleteSpace,
 		RequireAuth: true,
 	},
 }

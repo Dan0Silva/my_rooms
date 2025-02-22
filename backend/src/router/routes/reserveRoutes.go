@@ -8,21 +8,21 @@ import (
 
 var ReserveRoutes = []Routes{
 	{
-		Uri: "/reserves",
-		Method: http.MethodPost,
-		Function: reserveController.CreateReserve,
+		Uri:         "/reservations",
+		Method:      http.MethodPost,
+		Function:    reserveController.CreateReserve,
 		RequireAuth: false,
 	},
 	{
-		Uri: "/reserves",
-		Method: http.MethodGet,
-		Function: reserveController.ListReserves,
+		Uri:         "/reservations",
+		Method:      http.MethodGet,
+		Function:    reserveController.ListReservations,
 		RequireAuth: true,
 	},
 	{
-		Uri: "/reserves/{id}",
-		Method: http.MethodDelete,
-		Function: reserveController.DeleteReserve,
+		Uri:         "/reservations/{id}",
+		Method:      http.MethodDelete,
+		Function:    reserveController.DeleteReserve,
 		RequireAuth: true,
 	},
 }

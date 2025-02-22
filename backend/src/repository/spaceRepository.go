@@ -8,7 +8,6 @@ import (
 	"github.com/Dan0Silva/my_rooms/src/models"
 )
 
-
 type spaces struct {
 	database *sql.DB
 }
@@ -19,14 +18,14 @@ func NewSpacesRepository(db *sql.DB) *spaces {
 
 func (repository spaces) Create(newSpace models.Space) error {
 	statement, err := repository.database.Prepare(`
-	INSERT INTO SPACES (NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, ISAVAILABLE) 
-	VALUES (?, ?, ?, ?, ?, ?)`) 
+	INSERT INTO SPACES (NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, IS_AVAILABLE) 
+	VALUES (?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	_, err = statement.Exec(newSpace.Name, newSpace.Photo_url, newSpace.Description, newSpace.Capacity, newSpace.Locate, newSpace.IsAvailable) 
+	_, err = statement.Exec(newSpace.Name, newSpace.Photo_url, newSpace.Description, newSpace.Capacity, newSpace.Locate, newSpace.IsAvailable)
 	if err != nil {
 		return err
 	}
@@ -37,7 +36,7 @@ func (repository spaces) Create(newSpace models.Space) error {
 func (repository spaces) ListAll() ([]models.Space, error) {
 	list := []models.Space{}
 
-	rows, err := repository.database.Query("SELECT ID, NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, ISAVAILABLE FROM SPACES")
+	rows, err := repository.database.Query("SELECT * FROM SPACES")
 	if err != nil {
 		return nil, err
 	}
@@ -52,11 +51,12 @@ func (repository spaces) ListAll() ([]models.Space, error) {
 			&newSpace.Photo_url,
 			&newSpace.Description,
 			&newSpace.Capacity,
+			&newSpace.Reservations_count,
 			&newSpace.Locate,
-			&newSpace.IsAvailable); 
-		err != nil {
+			&newSpace.IsAvailable,
+			&newSpace.CreatedAt); err != nil {
 			return nil, err
-		} 
+		}
 
 		list = append(list, newSpace)
 	}
@@ -66,9 +66,9 @@ func (repository spaces) ListAll() ([]models.Space, error) {
 
 func (repository spaces) GetByID(spaceId string) (*models.Space, error) {
 	var space models.Space
-	
+
 	rows, err := repository.database.Query(`
-	SELECT ID, NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, ISAVAILABLE FROM SPACES WHERE ID = ?
+	SELECT * FROM SPACES WHERE ID = ?
 	`, spaceId)
 
 	if err != nil {
@@ -77,9 +77,16 @@ func (repository spaces) GetByID(spaceId string) (*models.Space, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		if err := rows.Scan(&space.ID, &space.Name, &space.Photo_url, &space.Description,
-			&space.Capacity, &space.Locate, &space.IsAvailable); 
-		err != nil {
+		if err := rows.Scan(
+			&space.ID,
+			&space.Name,
+			&space.Photo_url,
+			&space.Description,
+			&space.Capacity,
+			&space.Reservations_count,
+			&space.Locate,
+			&space.IsAvailable,
+			&space.CreatedAt); err != nil {
 			return nil, err
 		}
 	}
