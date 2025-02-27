@@ -18,14 +18,14 @@ func NewSpacesRepository(db *sql.DB) *spaces {
 
 func (repository spaces) Create(newSpace models.Space) error {
 	statement, err := repository.database.Prepare(`
-	INSERT INTO SPACES (NAME, PHOTO_URL, DESCRIPTION, CAPACITY, LOCATE, IS_AVAILABLE) 
+	INSERT INTO SPACES (NAME, PHOTO_URL, DESCRIPTION, LOCATE, IS_AVAILABLE) 
 	VALUES (?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		return err
 	}
 	defer statement.Close()
 
-	_, err = statement.Exec(newSpace.Name, newSpace.Photo_url, newSpace.Description, newSpace.Capacity, newSpace.Locate, newSpace.IsAvailable)
+	_, err = statement.Exec(newSpace.Name, newSpace.Photo_url, newSpace.Description, newSpace.Locate, newSpace.IsAvailable)
 	if err != nil {
 		return err
 	}
@@ -50,8 +50,6 @@ func (repository spaces) ListAll() ([]models.Space, error) {
 			&newSpace.Name,
 			&newSpace.Photo_url,
 			&newSpace.Description,
-			&newSpace.Capacity,
-			&newSpace.Reservations_count,
 			&newSpace.Locate,
 			&newSpace.IsAvailable,
 			&newSpace.CreatedAt); err != nil {
@@ -82,8 +80,6 @@ func (repository spaces) GetByID(spaceId string) (*models.Space, error) {
 			&space.Name,
 			&space.Photo_url,
 			&space.Description,
-			&space.Capacity,
-			&space.Reservations_count,
 			&space.Locate,
 			&space.IsAvailable,
 			&space.CreatedAt); err != nil {
@@ -92,7 +88,6 @@ func (repository spaces) GetByID(spaceId string) (*models.Space, error) {
 	}
 
 	return &space, nil
-
 }
 
 func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
@@ -110,10 +105,6 @@ func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
 	if editedSpace.Description != "" {
 		setClauses = append(setClauses, "DESCRIPTION = ?")
 		args = append(args, editedSpace.Description)
-	}
-	if editedSpace.Capacity != 0 {
-		setClauses = append(setClauses, "CAPACITY = ?")
-		args = append(args, editedSpace.Capacity)
 	}
 	if editedSpace.Locate != "" {
 		setClauses = append(setClauses, "LOCATE = ?")
