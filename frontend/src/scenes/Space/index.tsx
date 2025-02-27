@@ -17,10 +17,26 @@ export default () => {
   }, [id])
 
   const handleReserve = () => {
-    // Lógica de envio de dados, por enquanto, só marca como submetido
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    const today = new Date()
+    const selectedDate = new Date(date)
+
+    if (!emailRegex.test(email)) {
+      alert("O email não está no formato esperado.")
+      setEmail("")
+      setDate("")
+      return
+    }
+
+    if (selectedDate < today) {
+      alert("A data selecionada não pode ser anterior à data atual.")
+      setEmail("")
+      setDate("")
+      return
+    }
+
     setIsSubmitted(true)
-    // Aqui você pode realizar um post com os dados
-    // Por exemplo: reserveSpace({ name, email, date, spaceId: space?.id })
   }
 
   return (
