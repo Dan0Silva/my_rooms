@@ -4,6 +4,7 @@ import SpaceCard from '../../components/SpaceCard';
 
 import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
 import { getPosts } from '../../services/ api/api';
+import { Link } from 'react-router-dom';
 
 export default () => {
   const [page, setPage] = useState(1);
@@ -26,7 +27,9 @@ export default () => {
       <Header />
       <div className="grid h-[42rem] grid-cols-5 gap-y-4 w-full mt-12 px-52 justify-items-center">
         {items.map((item: any) => (
-          <SpaceCard key={item.id} space={item} />
+          <Link to={`/spaces/${item.id}`}>
+            <SpaceCard key={item.id} space={item} />
+          </Link>
         ))}
       </div>
       <div className="w-full h-16 flex justify-center pt-4">
