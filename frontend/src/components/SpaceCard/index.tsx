@@ -10,9 +10,9 @@ export default (props: Props) => {
        bg-white transition-transform transform duration-500 hover:scale-[102%] hover:translate-y-[-10px]"
       key={props.key}>
       <img
-        src="./default_photo.jpg"
+        src={props.space.photo_url}
         alt="photo"
-        className=" w-full object-cover rounded-2xl"
+        className=" w-full h-48 bg-clip-content object-cover rounded-2xl"
       />
       <div className="flex flex-col h-full">
         <p className="text-xl font-medium mt-2">{props.space.name}</p>
