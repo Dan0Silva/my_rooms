@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import Header from "../../components/Header"
 import { getSingleSpace } from "../../services/api/api"
 import Button from "../../components/Button"
+import Input from "../../components/Input"
 
 export default () => {
   const { id } = useParams<{ id: string }>()
@@ -79,48 +80,14 @@ export default () => {
               <div className="mt-6">
                 <h3 className="text-xl font-medium text-stone-800 mb-4">Faça sua reserva</h3>
 
-                <div className="mb-4">
-                  <label htmlFor="name" className="block text-sm text-stone-700">Nome</label>
-                  <input
-                    id="name"
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-stone-400"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="email" className="block text-sm text-stone-700">Email</label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-stone-400"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="date" className="block text-sm text-stone-700">Data da reserva</label>
-                  <input
-                    id="date"
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-4 py-2 mt-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-stone-400"
-                    required
-                  />
-                </div>
+                <Input label="Nome" type="name" value={name} setValue={setName} disabled={!space?.is_available} />
+                <Input label="Email" type="email" value={email} setValue={setEmail} disabled={!space?.is_available} />
+                <Input label="Data da reserva" type="date" value={date} setValue={setDate} disabled={!space?.is_available} />
 
                 <Button
                   content="Reservar"
                   onClick={handleReserve}
                   disabled={isSubmitted || !space?.is_available}
-                  className={`${isSubmitted ? "bg-green-500" : "bg-blue-600"
-                    } text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700`}
                 />
 
                 {isSubmitted && (
