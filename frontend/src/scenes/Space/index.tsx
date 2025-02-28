@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import Header from "../../components/Header"
-import { getSingleSpace } from "../../services/api/api"
+import { getSingleSpace } from "../../services/api/spaces"
 import Button from "../../components/Button"
 import Input from "../../components/Input"
+import validateReserveForm from "../../util/validateReserveForm"
+import { createReserve } from "../../services/api/reserves"
 
 export default () => {
   const { id } = useParams<{ id: string }>()
@@ -18,26 +20,15 @@ export default () => {
   }, [id])
 
   const handleReserve = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const isValidated = validateReserveForm({ date, setDate, email, setEmail })
+    if (!isValidated) return
 
-    const today = new Date()
-    const selectedDate = new Date(date)
-
-    if (!emailRegex.test(email)) {
-      alert("O email não está no formato esperado.")
-      setEmail("")
-      setDate("")
-      return
+    const user: User = {
+      name: name,
+      email: email
     }
 
-    if (selectedDate < today) {
-      alert("A data selecionada não pode ser anterior à data atual.")
-      setEmail("")
-      setDate("")
-      return
-    }
-
-    setIsSubmitted(true)
+    createReserve(space, user, new Date(date)).then((isCreated) => setIsSubmitted(isCreated))
   }
 
   return (

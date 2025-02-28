@@ -1,10 +1,8 @@
-import axios from 'axios';
-
-const baseURL = 'http://localhost:5050';
+import apiClient from "../apiClient";
 
 export const getSpaces = async (setPosts: Function) => {
   try {
-    const response = await axios.get(`${baseURL}/spaces`);
+    const response = await apiClient.get(`/spaces`);
     if (response.data && response.data.data) {
       setPosts(response.data.data);
     } else {
@@ -22,7 +20,7 @@ export const getSingleSpace = async (id: string | undefined, setPost: Function) 
       console.error('ID invalido')
     }
 
-    const response = await axios.get(`${baseURL}/spaces/${id}`)
+    const response = await apiClient.get(`/spaces/${id}`)
 
     if (response.data && response.data.data) {
       setPost(response.data.data)
