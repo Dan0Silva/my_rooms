@@ -3,37 +3,49 @@ import Header from '../../components/Header';
 import SpaceCard from '../../components/SpaceCard';
 
 import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
-import { getPosts } from '../../services/ api/api';
+import { getSpaces } from '../../services/api/api';
+import { Link } from 'react-router-dom';
 
 export default () => {
-  const [page, setPage] = useState(1);
-  const [items, setItems] = useState([]);
+  const [page, setPage] = useState(1); // Página atual
+  const [items, setItems] = useState<Space[]>([]); // Todos os espaços
+  const [paginatedItems, setPaginatedItems] = useState<Space[]>([]); // Itens da página atual
 
-  const handlePage = (state: number) => {
-    if (state == 1) {
+  const spacesPerPage = 10; // Número de espaços por página
+
+  useEffect(() => {
+    getSpaces(setItems);
+  }, []);
+
+  useEffect(() => {
+    const indexOfLastItem = page * spacesPerPage;
+    const indexOfFirstItem = indexOfLastItem - spacesPerPage;
+    setPaginatedItems(items.slice(indexOfFirstItem, indexOfLastItem));
+  }, [page, items]);
+
+  const handlePageChange = (direction: "next" | "prev") => {
+    if (direction === "next" && page * spacesPerPage < items.length) {
       setPage(page + 1);
-    } else if (state == 0) {
+    } else if (direction === "prev" && page > 1) {
       setPage(page - 1);
     }
   };
 
-  useEffect(() => {
-    getPosts(setItems);
-  }, []);
-
   return (
-    <div className='bg-stone-50'>
+    <div className='bg-stone-100 h-screen'>
       <Header />
       <div className="grid h-[42rem] grid-cols-5 gap-y-4 w-full mt-12 px-52 justify-items-center">
-        {items.map((item: any) => (
-          <SpaceCard key={item.id} space={item} />
+        {paginatedItems.map((item: any) => (
+          <Link to={`/spaces/${item.id}`}>
+            <SpaceCard key={item.id} space={item} />
+          </Link>
         ))}
       </div>
       <div className="w-full h-16 flex justify-center pt-4">
         <div
           className="cursor-pointer"
           onClick={() => {
-            handlePage(0);
+            handlePageChange("prev");
           }}
         >
           <GoChevronLeft size={32} />
@@ -42,7 +54,7 @@ export default () => {
         <div
           className="cursor-pointer"
           onClick={() => {
-            handlePage(1);
+            handlePageChange("next");
           }}
         >
           <GoChevronRight size={32} />
