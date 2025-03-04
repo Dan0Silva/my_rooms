@@ -5,21 +5,15 @@ import SpaceCard from '../../components/SpaceCard';
 import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
 import { getSpaces } from '../../services/api/spaces';
 import { Link } from 'react-router-dom';
-import SignInModal from '../../components/SignInModal';
+import { toast } from 'react-toastify';
 
 export default () => {
   const [page, setPage] = useState(1);
-
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(true)
 
   const [items, setItems] = useState<Space[]>([]);
   const [paginatedItems, setPaginatedItems] = useState<Space[]>([]);
 
   const spacesPerPage = 10;
-
-  const updateLoginModalState = () => {
-    setIsLoginModalOpen(!isLoginModalOpen)
-  }
 
   useEffect(() => {
     getSpaces(setItems);
@@ -68,7 +62,6 @@ export default () => {
           <GoChevronRight size={32} />
         </div>
       </div>
-      <SignInModal isOpen={isLoginModalOpen} onClose={updateLoginModalState} />
     </div>
   );
 };
