@@ -1,17 +1,25 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import SpaceCard from '../../components/SpaceCard';
 
 import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
 import { getSpaces } from '../../services/api/spaces';
 import { Link } from 'react-router-dom';
+import SignInModal from '../../components/SignInModal';
 
 export default () => {
-  const [page, setPage] = useState(1); // Página atual
-  const [items, setItems] = useState<Space[]>([]); // Todos os espaços
-  const [paginatedItems, setPaginatedItems] = useState<Space[]>([]); // Itens da página atual
+  const [page, setPage] = useState(1);
 
-  const spacesPerPage = 10; // Número de espaços por página
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(true)
+
+  const [items, setItems] = useState<Space[]>([]);
+  const [paginatedItems, setPaginatedItems] = useState<Space[]>([]);
+
+  const spacesPerPage = 10;
+
+  const updateLoginModalState = () => {
+    setIsLoginModalOpen(!isLoginModalOpen)
+  }
 
   useEffect(() => {
     getSpaces(setItems);
@@ -60,6 +68,7 @@ export default () => {
           <GoChevronRight size={32} />
         </div>
       </div>
+      <SignInModal isOpen={isLoginModalOpen} onClose={updateLoginModalState} />
     </div>
   );
 };
