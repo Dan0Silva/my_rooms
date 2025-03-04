@@ -3,7 +3,7 @@ import Header from '../../components/Header';
 import SpaceCard from '../../components/SpaceCard';
 
 import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
-import { getSpaces } from '../../services/api/api';
+import { getSpaces } from '../../services/api/spaces';
 import { Link } from 'react-router-dom';
 
 export default () => {

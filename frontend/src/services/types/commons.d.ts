@@ -6,3 +6,8 @@ declare interface Space {
   locate: string
   is_available: boolean
 }
+
+declare interface User {
+  name: string
+  email: string
+}

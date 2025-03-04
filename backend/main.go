@@ -16,6 +16,13 @@ func main() {
 	port := config.Port
 	router := router.Generate()
 
+	corsOptions := []handlers.CORSOption{
+		handlers.AllowedOrigins([]string{"*"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "PATCH"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+		handlers.AllowCredentials(),
+	}
+
 	fmt.Println("> Running on port ", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS()(router)))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), handlers.CORS(corsOptions...)(router)))
 }
