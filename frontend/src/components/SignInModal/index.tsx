@@ -2,7 +2,7 @@ import { useState } from "react"
 import { MdArrowBack } from "react-icons/md";
 import Input from "../Input";
 import Button from "../Button";
-import { signIn } from "../../services/api/login";
+import { useAuth } from "../../services/contexts/AuthContext";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -16,18 +16,21 @@ export default ({ isOpen, onClose }: Props) => {
 
   const [errorMessage, setErrorMessage] = useState(false)
 
-  const handleSubmit = () => {
-    signIn({ nick, password }).then(response => {
+  const { login } = useAuth()
 
-      if (!response) {
-        setErrorMessage(true)
-        return
-      }
+  const handleSubmit = async () => {
+    try {
+      await login(nick, password)
 
-      toast.success('Signed Successfully', { customProgressBar: true })
+      toast.success('Signed Successfully', {
+        hideProgressBar: true
+      })
       setErrorMessage(false)
       onClose()
-    })
+
+    } catch {
+      setErrorMessage(true)
+    }
   }
 
   if (!isOpen) return null
