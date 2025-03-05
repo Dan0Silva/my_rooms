@@ -8,8 +8,16 @@ import (
 )
 
 func Authenticate(next http.HandlerFunc) http.HandlerFunc {
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := authentication.ValidateToken(r); err != nil {
+		cookie, err := r.Cookie("jwt")
+		if err != nil {
+			response.Error(w, "Token not found", http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		tokenString := cookie.Value
+		if err := authentication.ValidateToken(tokenString); err != nil {
 			response.Error(w, "Not logged in", http.StatusUnauthorized, err.Error())
 			return
 		}

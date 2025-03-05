@@ -3,8 +3,6 @@ package authentication
 import (
 	"errors"
 	"fmt"
-	"net/http"
-	"strings"
 	"time"
 
 	"github.com/Dan0Silva/my_rooms/src/config"
@@ -16,16 +14,15 @@ var mySigninKey = []byte(config.SecretKey)
 func CreateToken(nick string) (string, error) {
 	claims := jwt.MapClaims{
 		"authorized": true,
-		"nick": nick,
-		"exp": time.Now().Add(time.Hour * 6).Unix(),
+		"nick":       nick,
+		"exp":        time.Now().Add(time.Hour * 6).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(mySigninKey)
 }
 
-func ValidateToken(r *http.Request) error {
-	tokenString := extractToken(r)
+func ValidateToken(tokenString string) error {
 	token, err := jwt.Parse(tokenString, getVerificationKey)
 
 	if err != nil {
@@ -37,16 +34,6 @@ func ValidateToken(r *http.Request) error {
 	}
 
 	return errors.New("invalid token")
-}
-
-func extractToken(r *http.Request) string {
-	token := r.Header.Get("Authorization")
-
-	if splitedToken := strings.Split(token, " "); len(splitedToken) == 2 {
-		return splitedToken[1]
-	}
-
-	return ""
 }
 
 func getVerificationKey(token *jwt.Token) (interface{}, error) {
