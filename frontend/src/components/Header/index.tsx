@@ -1,16 +1,38 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../Button";
 import SignInModal from "../SignInModal";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useAuth } from "../../services/contexts/AuthContext";
+import DropDownMenu from "../DropDownMenu";
 
 export default () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
+
   const { isAuthenticated, logout } = useAuth()
+
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const toggleDropdown = () => {
+    setIsDropdownMenuOpen(!isDropdownMenuOpen)
+  }
 
   const updateLoginModalState = () => {
     setIsLoginModalOpen(!isLoginModalOpen)
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <header className="w-full h-20 bg-stone-800 flex justify-between items-center px-8 shadow-lg">
@@ -24,13 +46,16 @@ export default () => {
 
       <div>
         {isAuthenticated ?
-          <div className="flex flex-row items-center bg-zinc-100 px-4 py-2 rounded-md cursor-pointer"
-            onClick={logout}>
-            <p className="text-zinc-800 mr-4">Hello, <strong>Admin</strong></p>
+          <div className="flex flex-row items-center h-12 min-w-36 rounded-md bg-stone-500 px-6 text-white font-semibold shadow-md cursor-pointer" ref={dropdownRef} onClick={toggleDropdown}>
+            <p className="text-white mr-4">Hello, Admin</p>
             <FaRegUserCircle size={32} color="text-zinc-800" />
           </div> :
           <Button content="Sign in" onClick={updateLoginModalState} />}
       </div>
+      {isDropdownMenuOpen && (
+        <DropDownMenu />
+      )}
+
       <SignInModal isOpen={isLoginModalOpen} onClose={updateLoginModalState} />
     </header>
   );

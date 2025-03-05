@@ -42,7 +42,6 @@ export default () => {
             <Button
               content="Voltar para a Home"
               onClick={() => window.history.back()}
-              className="text-sm text-stone-600 hover:text-stone-800 mb-4"
             />
           </div>
 
