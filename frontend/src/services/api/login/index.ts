@@ -21,3 +21,15 @@ export const signIn = async ({ nick, password }: Admin) => {
 
   return response.data.data
 }
+
+export const checkAuth = async () => {
+  const response = await apiClient.get('/check-auth')
+  if (response.status !== 200) {
+    throw new Error('Check Auth failed')
+  }
+}
+
+export const logoutAuth = async () => {
+  const r = await apiClient.post('/logout')
+
+}

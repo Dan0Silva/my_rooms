@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import { signIn } from "../../api/login";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { signIn, checkAuth, logoutAuth } from "../../api/login";
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -12,14 +12,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
+  useEffect(() => {
+    const check = async () => {
+      try {
+        await checkAuth()
+        setIsAuthenticated(true);
+        console.log('rod 1')
+      } catch {
+        setIsAuthenticated(false);
+        console.log('rod 2')
+      }
+    };
+    check();
+  }, [])
+
   const login = async (nick: string, password: string) => {
-    const token = await signIn({ nick, password })
-    // save token
+    await signIn({ nick, password })
     setIsAuthenticated(true)
   }
 
-  const logout = () => {
-    //remove token
+  const logout = async () => {
+    logoutAuth()
     setIsAuthenticated(false)
   }
 
