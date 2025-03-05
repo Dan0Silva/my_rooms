@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/Dan0Silva/my_rooms/src/authentication"
 	"github.com/Dan0Silva/my_rooms/src/config"
@@ -11,10 +12,10 @@ import (
 	"github.com/Dan0Silva/my_rooms/src/response"
 )
 
-func Login (w http.ResponseWriter, r *http.Request) {
+func Login(w http.ResponseWriter, r *http.Request) {
 	reqBody, err := io.ReadAll(r.Body)
 	var admin models.Admin
-	
+
 	if err != nil {
 		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
 		return
@@ -34,7 +35,7 @@ func Login (w http.ResponseWriter, r *http.Request) {
 		response.Error(w, "wrong nick", http.StatusUnauthorized, nil)
 		return
 	}
-	
+
 	if admin.Password != config.AdminPassword {
 		response.Error(w, "wrong password", http.StatusUnauthorized, nil)
 		return
@@ -46,5 +47,15 @@ func Login (w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.Success(w, http.StatusOK, userToken)
+	http.SetCookie(w, &http.Cookie{
+		Name:     "jwt",
+		Value:    userToken,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
+		Path:     "/",
+		Expires:  time.Now().Add(24 * time.Hour),
+	})
+
+	response.Success(w, http.StatusOK, map[string]string{"message": "Login successfully"})
 }

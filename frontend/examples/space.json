@@ -1,8 +1,0 @@
-{
-  "name": "Observatório Estelar",
-  "photo_url": "https://example.com/observatorio.jpg",
-  "description": "Um espaço futurista com vistas incríveis para o céu estrelado, ideal para eventos e observações astronômicas.",
-  "capacity": 50,
-  "locate": "Rua das Estrelas, 100, Galáxia Z",
-  "isAvailable": true
-}
