@@ -9,7 +9,7 @@ export default () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
 
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated } = useAuth()
 
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -46,14 +46,14 @@ export default () => {
 
       <div>
         {isAuthenticated ?
-          <div className="flex flex-row items-center h-12 min-w-36 rounded-md bg-stone-500 px-6 text-white font-semibold shadow-md cursor-pointer" ref={dropdownRef} onClick={toggleDropdown}>
+          <div className="flex flex-row items-center h-12 min-w-36 rounded-md bg-stone-500 px-6 text-white font-semibold shadow-md cursor-pointer" onClick={toggleDropdown}>
             <p className="text-white mr-4">Hello, Admin</p>
             <FaRegUserCircle size={32} color="text-zinc-800" />
           </div> :
           <Button content="Sign in" onClick={updateLoginModalState} />}
       </div>
       {isDropdownMenuOpen && (
-        <DropDownMenu />
+        <DropDownMenu ref={dropdownRef} toggleDropdown={toggleDropdown} />
       )}
 
       <SignInModal isOpen={isLoginModalOpen} onClose={updateLoginModalState} />
