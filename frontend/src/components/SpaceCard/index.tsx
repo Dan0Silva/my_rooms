@@ -1,25 +1,46 @@
+import { FaMapMarkerAlt } from "react-icons/fa";
+
 type Props = {
-  key: string
-  space: Space
+  key: string;
+  space: Space;
 };
 
-export default (props: Props) => {
+export default function SpaceCard(props: Props) {
+  const { space } = props;
+
   return (
     <div
-      className="cursor-pointer w-56 h-[20rem] p-4 rounded-2xl overflow-hidden drop-shadow-md
-       bg-white transition-transform transform duration-500 hover:scale-[102%] hover:translate-y-[-10px]"
-      key={props.key}>
+      className="cursor-pointer w-64 h-80 p-4 rounded-2xl overflow-hidden drop-shadow-md
+       bg-white transition-transform transform duration-300 hover:scale-[102%] hover:shadow-lg"
+      key={props.key}
+    >
       <img
-        src={props.space.photo_url}
-        alt="photo"
-        className=" w-full h-48 bg-clip-content object-cover rounded-xl"
+        src={space.photo_url}
+        alt={space.name}
+        className="w-full h-44 object-cover rounded-xl"
       />
-      <div className="flex flex-col h-full">
-        <p className="text-xl font-medium mt-2">{props.space.name}</p>
-        <p className="text-[16px] font-medium w-16 text-center rounded-2xl mt-2 bg-zinc-800 text-white">
-          2/50
+
+      <div className="flex flex-col h-full mt-3">
+        <p className="text-xl font-semibold text-gray-800 truncate">
+          {space.name}
         </p>
+
+        <div className="flex items-center mt-2">
+          <FaMapMarkerAlt className="text-gray-600 mr-2 ml-[-2px]" />
+          <p className="text-sm text-gray-600 truncate">{space.locate}</p>
+        </div>
+
+        <div className="mt-3 flex items-center">
+          <span
+            className={`w-3 h-3 rounded-full ${space.is_available ? "bg-green-500" : "bg-red-500"
+              }`}
+          ></span>
+          <p className="text-sm ml-2 text-gray-600">
+            {space.is_available ? "Disponível" : "Indisponível"}
+          </p>
+        </div>
+
       </div>
     </div>
   );
-};
+}
