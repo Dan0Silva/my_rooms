@@ -12,7 +12,7 @@ export default ({ type, content, onClick, disabled = false }: ButtonProps) => {
       onClick={onClick}
       disabled={disabled}
       className={`h-10 min-w-36 rounded-md bg-stone-500 px-6 text-white font-semibold shadow-md  transition duration-500 ease-in-out 
-        ${disabled ? 'bg-zinc-400 text-zinc-200 cursor-not-allowed' : 'cursor-pointer hover:bg-zinc-600 hover:text-zinc-100'} `}
+        ${disabled ? 'bg-zinc-400 text-zinc-200 cursor-not-allowed' : 'cursor-pointer hover:bg-stone-600'} `}
     >
       {content}
     </button>

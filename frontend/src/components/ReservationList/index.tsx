@@ -13,7 +13,7 @@ const ReservationList = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 h-12">
         <h1 className="text-2xl font-semibold">Reservas</h1>
       </div>
 
