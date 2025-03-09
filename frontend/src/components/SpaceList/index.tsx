@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import Button from '../Button';
 import { getSpaces } from '../../services/api/spaces';
+import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
+import { BiSolidEdit, BiTrash } from "react-icons/bi";
 
 export default () => {
   const [page, setPage] = useState(1)
@@ -26,46 +28,65 @@ export default () => {
     // setItems(items.filter((space) => space.id !== id));
   };
 
+  const handlePageChange = (action: 'next' | 'previous') => {
+    if (action == 'next' && items.length > page * spacesPerPage) {
+      setPage(page + 1)
+    } else if (action == 'previous' && page > 1) {
+      setPage(page - 1)
+    }
+  }
+
   useEffect(() => {
     getSpaces(setItems);
   }, []);
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6 h-12">
+      <div className="flex justify-between items-center mb-4 h-12">
         <h1 className="text-2xl font-semibold">Espaços</h1>
         <Button content="Criar Espaço" onClick={handleCreateSpace} />
       </div>
 
-      <div className="h-[calc(100vh-16rem)] border border-stone-500 overflow-hidden rounded-md shadow-md">
+      <div className="border border-stone-500 border-b-0 overflow-hidden rounded-md shadow-md">
         <table className="w-full">
-          {/* Cabeçalho da tabela */}
           <thead className="bg-stone-200 border-b border-stone-500">
             <tr>
-              <th className="p-4 text-left text-stone-800 font-semibold border-r border-stone-500">Nome</th>
-              <th className="p-4 text-left text-stone-800 font-semibold border-r border-stone-500">Descrição</th>
-              <th className="p-4 text-left text-stone-800 font-semibold">Ações</th>
+              <th className="p-4 w-64 text-left text-stone-800 font-semibold border-r border-stone-500">Nome</th>
+              <th className="p-4 w-[78rem] text-left text-stone-800 font-semibold border-r border-stone-500">Descrição</th>
+              <th className="p-4 w-32 text-left text-stone-800 font-semibold border-r border-stone-500">Situação</th>
+              <th className="p-4 text-left text-stone-800 font-semibold justify-center flex">Ações</th>
             </tr>
           </thead>
 
-          {/* Corpo da tabela */}
           <tbody>
             {paginatedItems.map((space, index) => (
               <tr
                 key={space.id}
-                className={`${index % 2 === 0 ? 'bg-stone-50' : 'bg-stone-100'}`}
+                className={`${index % 2 === 0 ? 'bg-stone-50' : 'bg-stone-100'} border-b border-stone-500`}
               >
-                {/* Nome */}
-                <td className="p-4 text-stone-800 border-r border-b border-stone-500">{space.name}</td>
-
-                {/* Descrição */}
-                <td className="p-4 text-stone-600 border-r border-b border-stone-500">{space.description}</td>
-
-                {/* Ações */}
+                <td className="p-4 text-stone-800 border-r border-stone-500">{space.name}</td>
+                <td className="p-4 text-stone-600 border-r border-stone-500">{space.description}</td>
+                <td className="p-4 text-stone-600 border-r border-stone-500">
+                  <div
+                    className={`h-6 w-16 flex items-center justify-center rounded-full text-sm font-semibold mt-2 text-white ${space?.is_available ? "bg-green-500" : "bg-red-500"
+                      }`}
+                  >{space.is_available ? 'Ativo' : 'Inativo'}</div>
+                </td>
                 <td className="p-4 border-b border-stone-500">
-                  <div className="flex space-x-2">
-                    <Button content="Editar" onClick={() => handleEditSpace(space.id)} />
-                    <Button content="Deletar" onClick={() => handleDeleteSpace(space.id)} />
+                  <div className="flex gap-2 items-center justify-center">
+                    <div
+                      className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
+                      onClick={() => handlePageChange("previous")}
+                    >
+                      <BiSolidEdit size={24} />
+                    </div>
+                    <div
+                      className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
+                      onClick={() => handlePageChange("previous")}
+                    >
+                      <BiTrash size={24} />
+                    </div>
+
                   </div>
                 </td>
               </tr>
@@ -73,32 +94,21 @@ export default () => {
           </tbody>
         </table>
       </div>
+      <div className="flex justify-end pr-6 items-center mt-3 fixed bottom-16 right-4">
+        <div
+          className="cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
+          onClick={() => handlePageChange("previous")}
+        >
+          <GoChevronLeft size={24} />
+        </div>
+        <p className="text-xl font-medium px-4">{page}</p>
+        <div
+          className="cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
+          onClick={() => handlePageChange("next")}
+        >
+          <GoChevronRight size={24} />
+        </div>
+      </div>
     </>
   );
 };
-
-
-
-{/* <div className='h-[calc(100vh-12rem)] overflow-y-auto '>
-        <div className="space-y-4">
-          {items.map((space: any) => (
-            <div key={space.id} className="p-4 rounded-md shadow-md flex">
-              <div className='flex items-center '>
-                <img
-                  src={space.photo_url}
-                  alt={space.name}
-                  className="w-32 h-24 mr-4 object-cover rounded-xl"
-                />
-              </div>
-              <div>
-                <h3 className="text-xl font-medium">{space.name}</h3>
-                <p className="text-stone-600">{space.description}</p>
-                <div className="mt-2 space-x-2">
-                  <Button content="Editar" onClick={() => handleEditSpace(space.id)} />
-                  <Button content="Deletar" onClick={() => handleDeleteSpace(space.id)} />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
