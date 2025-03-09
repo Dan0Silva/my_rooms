@@ -5,14 +5,13 @@ type Props = {
   space: Space;
 };
 
-export default function SpaceCard(props: Props) {
-  const { space } = props;
+export default function SpaceCard({ key, space }: Props) {
 
   return (
     <div
       className="cursor-pointer w-64 h-80 p-4 rounded-2xl overflow-hidden drop-shadow-md
        bg-white transition-transform transform duration-300 hover:scale-[102%] hover:shadow-lg"
-      key={props.key}
+      key={key}
     >
       <img
         src={space.photo_url}

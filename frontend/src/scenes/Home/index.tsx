@@ -5,13 +5,10 @@ import SpaceCard from '../../components/SpaceCard';
 import { GoChevronRight, GoChevronLeft } from 'react-icons/go';
 import { getSpaces } from '../../services/api/spaces';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../services/contexts/AuthContext';
 
 export default () => {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<Space[]>([]);
-
-  const { isAuthenticated } = useAuth()
 
   const spacesPerPage = 10;
 
@@ -33,45 +30,11 @@ export default () => {
     }
   };
 
-  console.log("contexto: ", isAuthenticated)
-
-  // return (
-  //   <div className='bg-stone-100 h-screen'>
-  //     <Header />
-  //     <div className="grid h-[42rem] grid-cols-5 gap-y-4 w-full mt-12 px-52 justify-items-center">
-  //       {paginatedItems.map((item: any) => (
-  //         <Link to={`/spaces/${item.id}`}>
-  //           <SpaceCard key={item.id} space={item} />
-  //         </Link>
-  //       ))}
-  //     </div>
-  //     <div className="w-full h-16 flex justify-center pt-4">
-  //       <div
-  //         className="cursor-pointer"
-  //         onClick={() => {
-  //           handlePageChange("prev");
-  //         }}
-  //       >
-  //         <GoChevronLeft size={32} />
-  //       </div>
-  //       <p className="text-xl font-semibold mx-6">page {page}</p>
-  //       <div
-  //         className="cursor-pointer"
-  //         onClick={() => {
-  //           handlePageChange("next");
-  //         }}
-  //       >
-  //         <GoChevronRight size={32} />
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
-
   return (
     <div className='bg-stone-100 min-h-screen flex flex-col'>
       <Header />
       <div className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 min-h-[42rem] mt-[-4px] ">
           {paginatedItems.map((item) => (
             <Link to={`/spaces/${item.id}`} key={item.id} className="transform transition-transform duration-200 hover:scale-105 items-center justify-center flex">
               <SpaceCard key={item.id} space={item} />

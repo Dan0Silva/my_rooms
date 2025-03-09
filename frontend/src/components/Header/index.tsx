@@ -4,8 +4,9 @@ import SignInModal from "../SignInModal";
 import { FaRegUserCircle } from "react-icons/fa";
 import { useAuth } from "../../services/contexts/AuthContext";
 import DropDownMenu from "../DropDownMenu";
+import { Link } from "react-router-dom";
 
-export default () => {
+export default ({ title }: { title?: string }) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
   const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false)
 
@@ -37,12 +38,14 @@ export default () => {
   return (
     <header className="w-full h-20 bg-stone-800 flex justify-between items-center px-8 shadow-lg">
 
-      <div className="flex items-center space-x-4">
-        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white">
-          <img src="/cat1.jpg" alt="logo" className="w-full h-full object-cover" />
+      <Link to={"/"} >
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white">
+            <img src="/cat1.jpg" alt="logo" className="w-full h-full object-cover" />
+          </div>
+          <h1 className="text-2xl text-white font-semibold">My Rooms {title ? (" - " + title) : ""}</h1>
         </div>
-        <h1 className="text-2xl text-white font-semibold">My Rooms</h1>
-      </div>
+      </Link>
 
       <div>
         {isAuthenticated ?

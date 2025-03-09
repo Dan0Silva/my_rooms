@@ -30,6 +30,5 @@ export const checkAuth = async () => {
 }
 
 export const logoutAuth = async () => {
-  const r = await apiClient.post('/logout')
-
+  await apiClient.post('/logout')
 }
