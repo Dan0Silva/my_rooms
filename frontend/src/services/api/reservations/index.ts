@@ -13,3 +13,15 @@ export const getReservations = async (setReservations: Function) => {
     console.error('Erro ao buscar reservas', error);
   }
 }
+
+export const deleteReservation = async (id: string) => {
+  try {
+    const response = await apiClient.delete(`/reservations/${id}`)
+
+    if (response.status != 200) {
+      throw new Error("Erro ao tentar deletar a reserva")
+    }
+  } catch (error) {
+    console.error('Erro ao deletar reserva: ', error);
+  }
+}

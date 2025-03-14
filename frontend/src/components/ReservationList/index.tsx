@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
-import { getReservations } from '../../services/api/reservations'; // Supondo que você tenha uma função para buscar reservas
+import { deleteReservation, getReservations } from '../../services/api/reservations'; // Supondo que você tenha uma função para buscar reservas
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import { BiTrash } from 'react-icons/bi';
+import ConfirmationModal from '../ConfirmationModal';
 
 export default () => {
   const [page, setPage] = useState(1);
   const [reservations, setReservations] = useState<Reservation[]>([]);
+
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [isConfirmDeleteAction, setIsConfirmDeleteAction] = useState<boolean>(false)
+  const [reservationIdToDelete, setReservationIdToDelete] = useState<string>("")
 
   const reservationsPerPage = 8;
 
@@ -15,10 +20,18 @@ export default () => {
     return reservations.slice(indexOfFirstItem, indexOfLastItem);
   }, [page, reservations]);
 
-  const handleDeleteReservation = (id: string) => {
-    // Lógica para deletar uma reserva
-    setReservations(reservations.filter((reservation) => reservation.id !== id));
-  };
+  const handleModal = () => {
+    setIsOpenModal(!isOpenModal)
+  }
+
+  const handleConfirmDeleteAction = () => {
+    setIsConfirmDeleteAction(true)
+  }
+
+  const handleDeleteReserve = (id: string) => {
+    handleModal()
+    setReservationIdToDelete(id)
+  }
 
   const handlePageChange = (action: 'next' | 'previous') => {
     if (action === 'next' && reservations.length > page * reservationsPerPage) {
@@ -29,18 +42,27 @@ export default () => {
   };
 
   useEffect(() => {
-    // Busca as reservas da API
+    if (isConfirmDeleteAction) {
+      deleteReservation(reservationIdToDelete)
+
+      setReservations(reservations.filter(item => item.id !== reservationIdToDelete))
+    }
+
+    setIsConfirmDeleteAction(false)
+  }, [isConfirmDeleteAction])
+
+  useEffect(() => {
     getReservations(setReservations);
   }, []);
 
+  console.log('s')
+
   return (
     <>
-      {/* Cabeçalho */}
       <div className="flex justify-between items-center mb-4 h-12">
         <h1 className="text-2xl font-semibold">Reservas</h1>
       </div>
 
-      {/* Tabela de Reservas */}
       <div className="border border-stone-500 border-b-0 overflow-hidden rounded-md shadow-md">
         <table className="w-full">
           <thead className="bg-stone-200 border-b border-stone-500">
@@ -58,13 +80,8 @@ export default () => {
                 key={reservation.id}
                 className={`${index % 2 === 0 ? 'bg-stone-50' : 'bg-stone-100'} border-b border-stone-500`}
               >
-                {/* Nome do Usuário */}
                 <td className="p-4 text-stone-800 border-r border-stone-500">{reservation.user_name}</td>
-
-                {/* E-mail do Usuário */}
                 <td className="p-4 text-stone-600 border-r border-stone-500">{reservation.user_email}</td>
-
-                {/* Data da Reserva */}
                 <td className="p-4 text-stone-600 border-r border-stone-500">
                   {new Date(reservation.reserve_date).toLocaleDateString('pt-BR', {
                     day: '2-digit',
@@ -73,12 +90,11 @@ export default () => {
                   })}
                 </td>
 
-                {/* Ações */}
                 <td className="p-4">
                   <div className="flex gap-2 items-center justify-center">
                     <div
                       className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
-                      onClick={() => handleDeleteReservation(reservation.id)}
+                      onClick={() => { handleDeleteReserve(reservation.id) }}
                     >
                       <BiTrash size={24} />
                     </div>
@@ -90,7 +106,6 @@ export default () => {
         </table>
       </div>
 
-      {/* Paginação */}
       <div className="flex justify-end pr-6 items-center mt-3 fixed bottom-16 right-4">
         <div
           className="cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
@@ -106,6 +121,8 @@ export default () => {
           <GoChevronRight size={24} />
         </div>
       </div>
+
+      <ConfirmationModal isOpen={isOpenModal} onClose={handleModal} message='deletar esta reserva' onConfirm={handleConfirmDeleteAction} />
     </>
   );
 };
