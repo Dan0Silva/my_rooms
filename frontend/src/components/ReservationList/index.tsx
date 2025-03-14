@@ -5,15 +5,7 @@ import { BiTrash } from 'react-icons/bi';
 
 export default () => {
   const [page, setPage] = useState(1);
-  const [reservations, setReservations] = useState<Reservation[]>([
-    {
-      id: 'test',
-      user_name: 'danilo a silva',
-      user_email: 'danil@mail.com',
-      reserve_date: '2025-03-03T21:00:00-03:00',
-      space_id: 'testing'
-    }
-  ]);
+  const [reservations, setReservations] = useState<Reservation[]>([]);
 
   const reservationsPerPage = 8;
 
@@ -38,7 +30,7 @@ export default () => {
 
   useEffect(() => {
     // Busca as reservas da API
-    getReservations();
+    getReservations(setReservations);
   }, []);
 
   return (
