@@ -16,9 +16,7 @@ export const getSpaces = async (setPosts: Function) => {
 
 export const getSingleSpace = async (id: string | undefined, setPost: Function) => {
   try {
-    if (id == undefined) {
-      console.error('ID invalido')
-    }
+    if (id == undefined) console.error('ID invalido')
 
     const response = await apiClient.get(`/spaces/${id}`)
 
@@ -30,5 +28,17 @@ export const getSingleSpace = async (id: string | undefined, setPost: Function) 
 
   } catch (error) {
     console.error('Erro ao buscar detalhes do espaço')
+  }
+}
+
+export const deleteSpace = async (id: string | undefined) => {
+  try {
+    if (id === undefined) console.error('ID invalido')
+
+    const response = await apiClient.delete(`/spaces/${id}`)
+
+    if (response.status !== 200) throw new Error("Erro ao tentar deletar o espaço")
+  } catch (error) {
+    console.error('Erro ao deletar espaço: ', error);
   }
 }
