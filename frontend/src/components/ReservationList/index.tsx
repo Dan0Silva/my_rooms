@@ -55,8 +55,6 @@ export default () => {
     getReservations(setReservations);
   }, []);
 
-  console.log('s')
-
   return (
     <>
       <div className="flex justify-between items-center mb-4 h-12">

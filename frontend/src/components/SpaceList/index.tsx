@@ -1,35 +1,50 @@
 import { useEffect, useMemo, useState } from 'react';
 import Button from '../Button';
-import { getSpaces } from '../../services/api/spaces';
+import { deleteSpace, getSpaces } from '../../services/api/spaces';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import { BiSolidEdit, BiTrash } from "react-icons/bi";
+import ConfirmationModal from '../ConfirmationModal';
 
 export default () => {
   const [page, setPage] = useState(1)
-  const [items, setItems] = useState<Space[]>([]);
+  const [spaces, setSpaces] = useState<Space[]>([]);
+
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [isConfirmDeleteAction, setIsConfirmDeleteAction] = useState<boolean>(false)
+  const [spaceIdToDelete, setSpaceIdToDelete] = useState<string>("")
 
   const spacesPerPage = 8
 
-  const paginatedItems = useMemo(() => {
+  const paginatedSpaces = useMemo(() => {
     const indexOfLastItem = page * spacesPerPage
     const indexOfFistItem = indexOfLastItem - spacesPerPage
-    return items.slice(indexOfFistItem, indexOfLastItem)
-  }, [page, items])
+    return spaces.slice(indexOfFistItem, indexOfLastItem)
+  }, [page, spaces])
+
+  const handleConfirmationModal = () => {
+    setIsOpenModal(!isOpenModal)
+  }
+
+  const handleDeleteSpace = (id: string) => {
+    handleConfirmationModal()
+    setSpaceIdToDelete(id)
+  };
+
+  const handleConfirmDeleteAction = () => {
+    setIsConfirmDeleteAction(true)
+  }
 
   const handleCreateSpace = () => {
     console.log('Criar novo espaço');
   };
 
-  const handleEditSpace = (id: number) => {
-    console.log('Editar espaço:', id);
-  };
-
-  const handleDeleteSpace = (id: number) => {
-    // setItems(items.filter((space) => space.id !== id));
+  const handleEditSpace = (id: string) => {
+    alert('Editar espaço:' + id);
+    // add edit space 
   };
 
   const handlePageChange = (action: 'next' | 'previous') => {
-    if (action == 'next' && items.length > page * spacesPerPage) {
+    if (action == 'next' && spaces.length > page * spacesPerPage) {
       setPage(page + 1)
     } else if (action == 'previous' && page > 1) {
       setPage(page - 1)
@@ -37,7 +52,17 @@ export default () => {
   }
 
   useEffect(() => {
-    getSpaces(setItems);
+    if (isConfirmDeleteAction) {
+      deleteSpace(spaceIdToDelete)
+
+      setSpaces(spaces.filter(item => item.id !== spaceIdToDelete))
+    }
+
+    setIsConfirmDeleteAction(false)
+  }, [isConfirmDeleteAction])
+
+  useEffect(() => {
+    getSpaces(setSpaces);
   }, []);
 
   return (
@@ -59,7 +84,7 @@ export default () => {
           </thead>
 
           <tbody>
-            {paginatedItems.map((space, index) => (
+            {paginatedSpaces.map((space, index) => (
               <tr
                 key={space.id}
                 className={`${index % 2 === 0 ? 'bg-stone-50' : 'bg-stone-100'} border-b border-stone-500`}
@@ -76,13 +101,13 @@ export default () => {
                   <div className="flex gap-2 items-center justify-center">
                     <div
                       className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
-                      onClick={() => handlePageChange("previous")}
+                      onClick={() => handleEditSpace(space.id)}
                     >
                       <BiSolidEdit size={24} />
                     </div>
                     <div
                       className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
-                      onClick={() => handlePageChange("previous")}
+                      onClick={() => handleDeleteSpace(space.id)}
                     >
                       <BiTrash size={24} />
                     </div>
@@ -109,6 +134,8 @@ export default () => {
           <GoChevronRight size={24} />
         </div>
       </div>
+
+      <ConfirmationModal isOpen={isOpenModal} onClose={handleConfirmationModal} message='deletar este spaço' onConfirm={handleConfirmDeleteAction} />
     </>
   );
 };
