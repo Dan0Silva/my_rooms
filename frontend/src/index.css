@@ -61,3 +61,31 @@
 .animation-delay-300 {
   animation-delay: 0.3s;
 }
+
+/* toggle button -------------------------------------------- */
+
+.toggle-btn {
+  transition: background-color 0.5s ease, border-color 0.2s ease;
+  box-shadow: 1px 1px 16px -6px rgba(0, 0, 0, 0.548);
+  position: relative;
+}
+
+.toggle-btn .thumb {
+  height: 1.75rem;
+  width: 1.75rem;
+  background-color: white;
+  border-radius: 99px;
+  transition: left 0.5s ease;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.toggle-btn.toggled  {
+  background-color: #54b154;
+}
+
+.toggle-btn.toggled .thumb {
+  left: calc(64px - 34px); 
+}

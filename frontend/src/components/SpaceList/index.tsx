@@ -4,6 +4,8 @@ import { deleteSpace, getSpaces } from '../../services/api/spaces';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import { BiSolidEdit, BiTrash } from "react-icons/bi";
 import ConfirmationModal from '../ConfirmationModal';
+import ToggleButton from '../ToggleButton';
+import SpaceLineOnList from '../SpaceLineOnList';
 
 export default () => {
   const [page, setPage] = useState(1)
@@ -78,43 +80,17 @@ export default () => {
             <tr>
               <th className="p-4 w-64 text-left text-stone-800 font-semibold border-r border-stone-500">Nome</th>
               <th className="p-4 w-[78rem] text-left text-stone-800 font-semibold border-r border-stone-500">Descrição</th>
-              <th className="p-4 w-32 text-left text-stone-800 font-semibold border-r border-stone-500">Situação</th>
-              <th className="p-4 text-left text-stone-800 font-semibold justify-center flex">Ações</th>
+              <th className="p-4 w-32 text-stone-800 font-semibold border-r border-stone-500 text-center px-4">Situação</th>
+              <th className="p-4 text-stone-800 font-semibold text-center px-4">Ações</th>
             </tr>
           </thead>
 
           <tbody>
             {paginatedSpaces.map((space, index) => (
-              <tr
-                key={space.id}
-                className={`${index % 2 === 0 ? 'bg-stone-50' : 'bg-stone-100'} border-b border-stone-500`}
-              >
-                <td className="p-4 text-stone-800 border-r border-stone-500">{space.name}</td>
-                <td className="p-4 text-stone-600 border-r border-stone-500">{space.description}</td>
-                <td className="p-4 text-stone-600 border-r border-stone-500">
-                  <div
-                    className={`h-6 w-16 flex items-center justify-center rounded-full text-sm font-semibold mt-2 text-white ${space?.is_available ? "bg-green-500" : "bg-red-500"
-                      }`}
-                  >{space.is_available ? 'Ativo' : 'Inativo'}</div>
-                </td>
-                <td className="p-4 border-b border-stone-500">
-                  <div className="flex gap-2 items-center justify-center">
-                    <div
-                      className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
-                      onClick={() => handleEditSpace(space.id)}
-                    >
-                      <BiSolidEdit size={24} />
-                    </div>
-                    <div
-                      className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
-                      onClick={() => handleDeleteSpace(space.id)}
-                    >
-                      <BiTrash size={24} />
-                    </div>
-
-                  </div>
-                </td>
-              </tr>
+              <SpaceLineOnList space={space}
+                index={index}
+                handleDeleteSpace={handleDeleteSpace}
+                handleEditSpace={handleEditSpace} />
             ))}
           </tbody>
         </table>

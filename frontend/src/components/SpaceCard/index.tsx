@@ -9,8 +9,8 @@ export default function SpaceCard({ key, space }: Props) {
 
   return (
     <div
-      className="cursor-pointer w-64 h-80 p-4 rounded-2xl overflow-hidden drop-shadow-md
-       bg-white transition-transform transform duration-300 hover:scale-[102%] hover:shadow-lg"
+      className="cursor-pointer w-64 h-80 p-4 rounded-2xl overflow-hidden shadow-md border border-stone-400
+       bg-stone-50 transition-transform transform duration-300 hover:scale-[102%] hover:shadow-lg"
       key={key}
     >
       <img
