@@ -125,22 +125,21 @@ func EditSpace(w http.ResponseWriter, r *http.Request) {
 func UpdateSpaceStatus(w http.ResponseWriter, r *http.Request) {
 	spaceId := mux.Vars(r)["id"]
 	var request struct {
-		IsAvailable bool `json:"is_available"`
+		IsAvailable *bool `json:"is_available"`
+	}
+
+	if spaceId == "" {
+		response.Error(w, "space ID is required", http.StatusBadRequest, nil)
+		return
 	}
 	
-	reqBody, err := io.ReadAll(r.Body)
-	if err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil{
 		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
 		return
 	}
 
-	if err = json.Unmarshal(reqBody, &request); err != nil {
-		response.Error(w, "error converting request body to JSON", http.StatusBadRequest, err.Error())
-		return
-	}
-
-	if spaceId == "" {
-		response.Error(w, "invalid id", http.StatusBadRequest, nil)
+	if request.IsAvailable == nil {
+		response.Error(w, "field 'is_available' is required and must be a boolean", http.StatusBadRequest, nil)
 		return
 	}
 
@@ -153,7 +152,7 @@ func UpdateSpaceStatus(w http.ResponseWriter, r *http.Request) {
 
 	spaceRepository := repository.NewSpacesRepository(db)
 
-	if err = spaceRepository.UpdateSpaceStatus(spaceId, request.IsAvailable); err != nil {
+	if err = spaceRepository.UpdateSpaceStatus(spaceId, *request.IsAvailable); err != nil {
 		response.Error(w, "error trying update space", http.StatusInternalServerError, err.Error())
 		return
 	}
