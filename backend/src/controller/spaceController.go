@@ -122,6 +122,45 @@ func EditSpace(w http.ResponseWriter, r *http.Request) {
 	response.Success(w, http.StatusOK, nil)
 }
 
+func UpdateSpaceStatus(w http.ResponseWriter, r *http.Request) {
+	spaceId := mux.Vars(r)["id"]
+	var request struct {
+		IsAvailable bool `json:"is_available"`
+	}
+	
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if err = json.Unmarshal(reqBody, &request); err != nil {
+		response.Error(w, "error converting request body to JSON", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if spaceId == "" {
+		response.Error(w, "invalid id", http.StatusBadRequest, nil)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	spaceRepository := repository.NewSpacesRepository(db)
+
+	if err = spaceRepository.UpdateSpaceStatus(spaceId, request.IsAvailable); err != nil {
+		response.Error(w, "error trying update space", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(w, http.StatusOK, nil)
+} 
+
 func DeleteSpace(w http.ResponseWriter, r *http.Request) {
 	spaceId := mux.Vars(r)["id"]
 

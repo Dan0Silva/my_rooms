@@ -32,6 +32,12 @@ var SpaceRoutes = []Routes{
 		RequireAuth: true,
 	},
 	{
+		Uri:         "/spaces/{id}/status",
+		Method:      http.MethodPatch,
+		Function:    spaceController.UpdateSpaceStatus,
+		RequireAuth: true,
+	},
+	{
 		Uri:         "/spaces/{id}",
 		Method:      http.MethodDelete,
 		Function:    spaceController.DeleteSpace,
