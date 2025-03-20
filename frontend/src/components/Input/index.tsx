@@ -8,7 +8,7 @@ type Props = {
 
 export default ({ label, type, value, setValue, disabled }: Props) => {
   return (
-    <div className="mb-4">
+    <div className="mb-4 flex flex-col items-baseline">
       <label htmlFor={type} className="block font-semibold text-sm text-stone-700">{label}</label>
       <input
         id={type}

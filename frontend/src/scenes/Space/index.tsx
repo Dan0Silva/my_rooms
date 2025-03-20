@@ -8,7 +8,7 @@ import validateReserveForm from "../../util/validateReserveForm"
 import { createReserve } from "../../services/api/reserves"
 
 export default () => {
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams()
   const [space, setSpace] = useState<Space | null>(null)
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -37,7 +37,7 @@ export default () => {
 
       {/* Área principal */}
       <div className="container mx-auto px-6 py-8 flex-1">
-        <div className="bg-white shadow-lg rounded-3xl overflow-hidden">
+        <div className="bg-white shadow-lg rounded-3xl overflow-hidden border border-stone-400">
           <div className="p-6 h-20 bg-stone-800">
             <Button
               content="Voltar para a Home"

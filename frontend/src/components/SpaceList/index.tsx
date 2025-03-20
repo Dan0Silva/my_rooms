@@ -2,16 +2,14 @@ import { useEffect, useMemo, useState } from 'react';
 import Button from '../Button';
 import { deleteSpace, getSpaces } from '../../services/api/spaces';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
-import { BiSolidEdit, BiTrash } from "react-icons/bi";
 import ConfirmationModal from '../ConfirmationModal';
-import ToggleButton from '../ToggleButton';
 import SpaceLineOnList from '../SpaceLineOnList';
 
 export default () => {
   const [page, setPage] = useState(1)
   const [spaces, setSpaces] = useState<Space[]>([]);
 
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
+  const [isConfirmModalOpen, setisConfirmModalOpen] = useState<boolean>(false)
   const [isConfirmDeleteAction, setIsConfirmDeleteAction] = useState<boolean>(false)
   const [spaceIdToDelete, setSpaceIdToDelete] = useState<string>("")
 
@@ -24,7 +22,7 @@ export default () => {
   }, [page, spaces])
 
   const handleConfirmationModal = () => {
-    setIsOpenModal(!isOpenModal)
+    setisConfirmModalOpen(!isConfirmModalOpen)
   }
 
   const handleDeleteSpace = (id: string) => {
@@ -38,11 +36,6 @@ export default () => {
 
   const handleCreateSpace = () => {
     console.log('Criar novo espaço');
-  };
-
-  const handleEditSpace = (id: string) => {
-    alert('Editar espaço:' + id);
-    // add edit space 
   };
 
   const handlePageChange = (action: 'next' | 'previous') => {
@@ -89,8 +82,7 @@ export default () => {
             {paginatedSpaces.map((space, index) => (
               <SpaceLineOnList space={space}
                 index={index}
-                handleDeleteSpace={handleDeleteSpace}
-                handleEditSpace={handleEditSpace} />
+                handleDeleteSpace={handleDeleteSpace} />
             ))}
           </tbody>
         </table>
@@ -111,7 +103,7 @@ export default () => {
         </div>
       </div>
 
-      <ConfirmationModal isOpen={isOpenModal} onClose={handleConfirmationModal} message='deletar este spaço' onConfirm={handleConfirmDeleteAction} />
+      <ConfirmationModal isOpen={isConfirmModalOpen} onClose={handleConfirmationModal} message='deletar este spaço' onConfirm={handleConfirmDeleteAction} />
     </>
   );
 };

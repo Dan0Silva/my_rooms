@@ -1,18 +1,19 @@
 import { BiSolidEdit, BiTrash } from "react-icons/bi"
 import ToggleButton from "../ToggleButton"
 import { useState } from "react"
-import { updateSpaceStatus } from "../../services/api/spaces"
+import { updateSpace, updateSpaceStatus } from "../../services/api/spaces"
 import { toast } from "react-toastify"
+import EditSpaceModal from "../EditSpaceModal"
 
 interface Props {
   space: Space
   index: number
-  handleEditSpace: (id: string) => void
   handleDeleteSpace: (id: string) => void
 }
 
-export default ({ space, index, handleEditSpace, handleDeleteSpace }: Props) => {
+export default ({ space, index, handleDeleteSpace }: Props) => {
   const [isAvailable, setIsAvailable] = useState<boolean>(space.is_available)
+  const [isEditSpaceModalOpen, setIsEditSpaceModalOpen] = useState(false)
 
   const handleToggleAction = () => {
     // requisitar a api alterar o status > esperar resposta > resposta ? altera o estado : nao altera
@@ -24,6 +25,26 @@ export default ({ space, index, handleEditSpace, handleDeleteSpace }: Props) => 
         setIsAvailable(!isAvailable)
       }
     })
+  }
+
+  const onSave = (updatedSpace: Space) => {
+    updateSpace(updatedSpace.id, updatedSpace).then(res => {
+      if (res) {
+        toast.success('Espaço atualizado com sucesso!', {
+          hideProgressBar: true,
+        });
+        updateEditSpaceModalState();
+        window.location.reload()
+      } else {
+        toast.error('Falha ao atualizar espaço!', {
+          hideProgressBar: true,
+        });
+      }
+    })
+  }
+
+  const updateEditSpaceModalState = () => {
+    setIsEditSpaceModalOpen(!isEditSpaceModalOpen)
   }
 
   return (
@@ -41,7 +62,7 @@ export default ({ space, index, handleEditSpace, handleDeleteSpace }: Props) => 
         <div className="flex gap-2 items-center justify-center">
           <div
             className="h-9 w-9 flex items-center justify-center cursor-pointer rounded-full hover:bg-gray-200 transition-colors duration-200"
-            onClick={() => handleEditSpace(space.id)}
+            onClick={updateEditSpaceModalState}
           >
             <BiSolidEdit size={24} />
           </div>
@@ -51,9 +72,12 @@ export default ({ space, index, handleEditSpace, handleDeleteSpace }: Props) => 
           >
             <BiTrash size={24} />
           </div>
+          <EditSpaceModal space={space} isOpen={isEditSpaceModalOpen} onClose={updateEditSpaceModalState} onSave={onSave} />
 
         </div>
+
       </td>
+
     </tr>
   )
 }

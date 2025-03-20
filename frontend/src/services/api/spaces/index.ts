@@ -13,7 +13,7 @@ export const getSpaces = async (setPosts: Function) => {
   }
 };
 
-export const getSingleSpace = async (id: string, setPost: Function) => {
+export const getSingleSpace = async (id: string | undefined, setPost: Function) => {
   try {
     const response = await apiClient.get(`/spaces/${id}`)
 
@@ -25,6 +25,22 @@ export const getSingleSpace = async (id: string, setPost: Function) => {
 
   } catch (error) {
     console.error('Erro ao buscar detalhes do espaço')
+  }
+}
+
+export const updateSpace = async (id: string, updatedSpace: Space) => {
+  try {
+    const response = await apiClient.patch(`/spaces/${id}`, updatedSpace)
+
+    if (response.status != 200) {
+      throw new Error("Erro ao editar espaço")
+    }
+
+    return true
+    
+  } catch (error) {
+    console.error(error)
+    return false
   }
 }
 
