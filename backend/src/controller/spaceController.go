@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/Dan0Silva/my_rooms/src/database"
@@ -94,6 +95,18 @@ func EditSpace(w http.ResponseWriter, r *http.Request) {
 	spaceId := mux.Vars(r)["id"]
 	var space models.Space
 	
+	if spaceId == "" {
+		response.Error(w, "space ID is required", http.StatusBadRequest, nil)
+		return
+	}
+
+	uuidPattern := `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`
+
+	if match, _ := regexp.MatchString(uuidPattern, spaceId); !match {
+		response.Error(w, "invalid space ID format", http.StatusBadRequest, nil)
+		return
+	}
+
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
