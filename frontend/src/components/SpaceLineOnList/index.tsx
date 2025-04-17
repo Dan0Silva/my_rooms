@@ -3,7 +3,7 @@ import ToggleButton from "../ToggleButton"
 import { useState } from "react"
 import { updateSpace, updateSpaceStatus } from "../../services/api/spaces"
 import { toast } from "react-toastify"
-import EditSpaceModal from "../EditSpaceModal"
+import SpaceFormModal from "../SpaceFormModal"
 
 interface Props {
   space: Space
@@ -72,7 +72,7 @@ export default ({ space, index, handleDeleteSpace }: Props) => {
           >
             <BiTrash size={24} />
           </div>
-          <EditSpaceModal space={space} isOpen={isEditSpaceModalOpen} onClose={updateEditSpaceModalState} onSave={onSave} />
+          <SpaceFormModal space={space} isOpen={isEditSpaceModalOpen} onClose={updateEditSpaceModalState} onSave={onSave} />
 
         </div>
 

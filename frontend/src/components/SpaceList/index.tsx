@@ -4,6 +4,7 @@ import { deleteSpace, getSpaces } from '../../services/api/spaces';
 import { GoChevronLeft, GoChevronRight } from 'react-icons/go';
 import ConfirmationModal from '../ConfirmationModal';
 import SpaceLineOnList from '../SpaceLineOnList';
+import SpaceFormModal from '../SpaceFormModal';
 
 export default () => {
   const [page, setPage] = useState(1)
@@ -11,6 +12,10 @@ export default () => {
 
   const [isConfirmModalOpen, setisConfirmModalOpen] = useState<boolean>(false)
   const [isConfirmDeleteAction, setIsConfirmDeleteAction] = useState<boolean>(false)
+
+  // criar espaco
+  const [isCreateSpaceModalOpen, setIsCreateSpaceModalOpen] = useState<boolean>(false)
+
   const [spaceIdToDelete, setSpaceIdToDelete] = useState<string>("")
 
   const spacesPerPage = 8
@@ -20,6 +25,10 @@ export default () => {
     const indexOfFistItem = indexOfLastItem - spacesPerPage
     return spaces.slice(indexOfFistItem, indexOfLastItem)
   }, [page, spaces])
+
+  const handleCreateSpaceModal = () => {
+    setIsCreateSpaceModalOpen(!isCreateSpaceModalOpen)
+  }
 
   const handleConfirmationModal = () => {
     setisConfirmModalOpen(!isConfirmModalOpen)
@@ -33,10 +42,6 @@ export default () => {
   const handleConfirmDeleteAction = () => {
     setIsConfirmDeleteAction(true)
   }
-
-  const handleCreateSpace = () => {
-    console.log('Criar novo espaço');
-  };
 
   const handlePageChange = (action: 'next' | 'previous') => {
     if (action == 'next' && spaces.length > page * spacesPerPage) {
@@ -64,7 +69,7 @@ export default () => {
     <>
       <div className="flex justify-between items-center mb-4 h-12">
         <h1 className="text-2xl font-semibold">Espaços</h1>
-        <Button content="Criar Espaço" onClick={handleCreateSpace} />
+        <Button content="Criar Espaço" onClick={handleCreateSpaceModal} />
       </div>
 
       <div className="border border-stone-500 border-b-0 overflow-hidden rounded-md shadow-md">
@@ -104,6 +109,7 @@ export default () => {
       </div>
 
       <ConfirmationModal isOpen={isConfirmModalOpen} onClose={handleConfirmationModal} message='deletar este spaço' onConfirm={handleConfirmDeleteAction} />
+      <SpaceFormModal isOpen={isCreateSpaceModalOpen} onClose={handleCreateSpaceModal} space={{}} onSave={() => alert('salvou')} />
     </>
   );
 };

@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { MdArrowBack } from 'react-icons/md';
 import Input from '../Input';
 import Button from '../Button';
-import { toast } from 'react-toastify';
-import { updateSpace } from '../../services/api/spaces';
 
 type Props = {
   isOpen: boolean;
@@ -80,24 +78,28 @@ export default ({ isOpen, onClose, space, onSave }: Props) => {
         <div>
           <Input
             label="Nome"
+            placeholder='Inclua o nome do espaço'
             setValue={setName}
             value={name}
             type="text"
           />
           <Input
             label="Descrição"
+            placeholder='Inclua a descrição do espaço'
             setValue={setDescription}
             value={description}
             type="text"
           />
           <Input
             label="Foto_URL"
+            placeholder='Inclua a url da foto do espaço'
             setValue={setPhotoUrl}
             value={photoUrl}
             type="text"
           />
           <Input
             label="Localização"
+            placeholder='Inclua o local do espaço'
             setValue={setLocate}
             value={locate}
             type="text"
