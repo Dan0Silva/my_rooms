@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { MdArrowBack } from "react-icons/md";
 import Input from "../Input";
 import Button from "../Button";
@@ -13,6 +13,8 @@ type Props = {
 export default ({ isOpen, onClose }: Props) => {
   const [nick, setNick] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const [errorMessage, setErrorMessage] = useState(false)
 
@@ -33,11 +35,29 @@ export default ({ isOpen, onClose }: Props) => {
     }
   }
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose(); // Fecha o modal se o clique foi fora
+      }
+    };
+
+    // Adiciona o listener ao documento
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Remove o listener ao desmontar o componente
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null
 
   return (
     <div className="z-10 fixed inset-0 bg-[rgba(0,0,0,0.5)] flex items-center justify-center">
-      <div className="bg-white w-96 rounded-2xl p-6 shadow-2xl">
+      <div ref={modalRef} className="bg-white w-96 rounded-2xl p-6 shadow-2xl">
         <div className="flex flex-row items-center mb-8">
           <button className="pt-1 cursor-pointer" onClick={() => {
             setErrorMessage(false)

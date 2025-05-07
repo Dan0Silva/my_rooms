@@ -7,6 +7,14 @@ declare interface Space {
   is_available: boolean
 }
 
+declare interface Reservation {
+  id: string
+  user_name: string
+  user_email: string
+  space_id: string
+  reserve_date: string
+}
+
 declare interface User {
   name: string
   email: string

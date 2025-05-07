@@ -132,6 +132,23 @@ func (repository spaces) Edit(spaceId string, editedSpace models.Space) error {
 	return nil
 }
 
+func (repository spaces) UpdateSpaceStatus(spaceId string, status bool) error {
+	query := "UPDATE SPACES SET IS_AVAILABLE = ? WHERE ID = ?"
+	
+	statement, err := repository.database.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer statement.Close()
+
+	_, err = statement.Exec(status, spaceId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+} 
+
 func (repository spaces) Delete(spaceId string) error {
 	statement, err := repository.database.Prepare("DELETE FROM SPACES WHERE ID = ?")
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/Dan0Silva/my_rooms/src/database"
@@ -94,6 +95,18 @@ func EditSpace(w http.ResponseWriter, r *http.Request) {
 	spaceId := mux.Vars(r)["id"]
 	var space models.Space
 	
+	if spaceId == "" {
+		response.Error(w, "space ID is required", http.StatusBadRequest, nil)
+		return
+	}
+
+	uuidPattern := `^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`
+
+	if match, _ := regexp.MatchString(uuidPattern, spaceId); !match {
+		response.Error(w, "invalid space ID format", http.StatusBadRequest, nil)
+		return
+	}
+
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
@@ -121,6 +134,44 @@ func EditSpace(w http.ResponseWriter, r *http.Request) {
 
 	response.Success(w, http.StatusOK, nil)
 }
+
+func UpdateSpaceStatus(w http.ResponseWriter, r *http.Request) {
+	spaceId := mux.Vars(r)["id"]
+	var request struct {
+		IsAvailable *bool `json:"is_available"`
+	}
+
+	if spaceId == "" {
+		response.Error(w, "space ID is required", http.StatusBadRequest, nil)
+		return
+	}
+	
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil{
+		response.Error(w, "error to read the request body", http.StatusBadRequest, err.Error())
+		return
+	}
+
+	if request.IsAvailable == nil {
+		response.Error(w, "field 'is_available' is required and must be a boolean", http.StatusBadRequest, nil)
+		return
+	}
+
+	db, err := database.Connect()
+	if err != nil {
+		response.Error(w, "error trying to connect to the database", http.StatusInternalServerError, err.Error())
+		return
+	}
+	defer db.Close()
+
+	spaceRepository := repository.NewSpacesRepository(db)
+
+	if err = spaceRepository.UpdateSpaceStatus(spaceId, *request.IsAvailable); err != nil {
+		response.Error(w, "error trying update space", http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.Success(w, http.StatusOK, nil)
+} 
 
 func DeleteSpace(w http.ResponseWriter, r *http.Request) {
 	spaceId := mux.Vars(r)["id"]

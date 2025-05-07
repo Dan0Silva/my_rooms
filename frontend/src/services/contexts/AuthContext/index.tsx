@@ -3,6 +3,7 @@ import { signIn, checkAuth, logoutAuth } from "../../api/login";
 
 interface AuthContextType {
   isAuthenticated: boolean
+  isLoading: boolean
   login: (nick: string, password: string) => Promise<void>
   logout: () => void
 }
@@ -11,6 +12,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const check = async () => {
@@ -21,6 +23,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch {
         setIsAuthenticated(false);
         console.log('rod 2')
+      } finally {
+        setIsLoading(false)
       }
     };
     check();
@@ -32,12 +36,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const logout = async () => {
-    logoutAuth()
+    await logoutAuth()
     setIsAuthenticated(false)
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   )
